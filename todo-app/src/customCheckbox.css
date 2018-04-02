@@ -1,0 +1,54 @@
+.styled-checkbox {
+    position: absolute; /* take it out of document flow*/
+    opacity: 0; /* hide it*/
+}
+
+.styled-checkbox + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 500;
+    color: #353535;
+}
+
+/* Box default style (unchecked) */
+.styled-checkbox + label:before {
+    content: '';
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 2px solid #353535;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius:3px;
+}
+
+/* Box checked */
+.styled-checkbox:checked + label:before {
+    border: 2px solid #777777;
+}
+
+/* Checkmark indicator style */
+.styled-checkbox:checked + label:after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 7px;
+    width: 5px;
+    height: 10px;
+    border: solid #777777;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Style label when checkbox is checked */
+.styled-checkbox:checked + label {
+    text-decoration: line-through;
+    text-decoration-color: #777777;
+    color: #777777;
+}
