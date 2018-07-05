@@ -1,6 +1,8 @@
 import todoReducer from './todoReducer';
+import userReducer from './userReducer';
 
 export {
-    todoReducer
+    todoReducer,
+    userReducer
 };
 

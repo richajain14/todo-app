@@ -15,17 +15,21 @@ class AddTodo extends Component {
 
     render() {
         return (
-            <div className="input-group">
+            <div className="input-group mb-3">
                 <input type="text"
                        className="form-control"
                        placeholder="Add a to do..."
                        aria-label="Add a to do"
                        aria-describedby="basic-addon2"
+                       autoFocus={true}
                        onChange={this.updateTodo}
                        value={this.state.newTask}/>
-                <div className="addBtn position-absolute">
-                    <a className="badge badge-primary p-1" href="#"
-                       onClick={this.addTodo}>Add To Do</a>
+                <div className="input-group-append">
+                    <button className="btn btn-primary"
+                            type="button"
+                    onClick={this.addTodo}>
+                        Add To Do
+                    </button>
                 </div>
             </div>
         );
@@ -33,7 +37,13 @@ class AddTodo extends Component {
 
     addTodo() {
         if (this.state.newTask && this.state.newTask.length > 0) {
-            this.props.addTodo(this.state.newTask);
+            let newTodo = {
+                text: this.state.newTask,
+                completed: false,
+                isPublic: false,
+                username: this.props.user.username
+            };
+            this.props.addTodo(newTodo);
         }
 
         this.setState({ newTask: '' }); //clear the input field after add
@@ -45,7 +55,8 @@ class AddTodo extends Component {
 }
 
 AddTodo.propType = {
-    addTodo: PropTypes.func.isRequired
+    addTodo: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
 };
 
 export default AddTodo;

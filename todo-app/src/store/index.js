@@ -1,12 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import { todoReducer } from '../reducers';
+import { todoReducer, userReducer } from '../reducers';
 
 let store = null;
 export default {
     createStore: () => {
         const reducers = combineReducers({
-            todos: todoReducer
+            todos: todoReducer,
+            user: userReducer
         });
 
         const store = createStore(reducers, applyMiddleware(thunk));

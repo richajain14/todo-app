@@ -1,18 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.css';
+import io from 'socket.io-client';
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store';
-import * as todoActions from './actions';
 import registerServiceWorker from './registerServiceWorker';
 
-let thisStore = store.createStore();
-thisStore.dispatch(todoActions.fetchTodos()); //Fetch all the todos first thing.
+
+//Socket listener
+export const socket = io.connect('http://localhost:8080');
 
 const app = (
-    <Provider store={ thisStore }>
+    <Provider store={ store.createStore() }>
         <App />
     </Provider>
 );

@@ -8,10 +8,12 @@ class TodoList extends Component {
 
         // This binding is necessary to make `this` work in the callback
         this.toggleTodo = this.toggleTodo.bind(this);
+        this.toggleisPublic = this.toggleisPublic.bind(this);
     }
 
     render() {
         const list = this.props.todos;
+        const user = this.props.user;
 
         if (!list) {
             return null;
@@ -27,10 +29,33 @@ class TodoList extends Component {
                                    id={chkId}
                                    ref="chkBox"
                                    type="checkbox"
-                                   defaultChecked={item.completed}
-                                   value={item.id}
-                                   onClick={this.toggleTodo}/>
+                                   checked={item.completed}
+                                   value={item._id}
+                                   disabled={user.username !== item.username}
+                                   onChange={this.toggleTodo}/>
                             <label className="mb-0" htmlFor={chkId}>{item.text}</label>
+                            {user.username === item.username
+                            && <div className="row float-right">
+                                <div className="col-md-auto">
+                                    <input className="styled-checkbox"
+                                           id={`public-${chkId}`}
+                                           ref="publicChkBox"
+                                           type="checkbox"
+                                           checked={item.isPublic}
+                                           value={item._id}
+                                           disabled={user.username !== item.username}
+                                           onChange={this.toggleisPublic}/>
+                                    <label className="form-check-label" htmlFor={`public-${chkId}`}>
+                                        Show to others
+                                    </label>
+                                </div>
+                                <div className="col">
+                                <button className="btn btn-sm btn-primary"
+                                       onClick={this.handleDelete.bind(this, item)}>Delete</button>
+                                </div>
+
+                            </div>
+                            }
                         </li>
                     );
                 })}
@@ -38,17 +63,34 @@ class TodoList extends Component {
         );
     }
 
+    toggleisPublic(event) {
+        console.log(event.target)
+        event.preventDefault();
+        let todo = this.props.todos.filter((item) => item._id === event.target.value)[0];
+        todo = { ...todo }; //copy so the props is modified
+        todo.isPublic = event.target.checked;
+        this.props.updateTodo(todo);
+    }
+
     toggleTodo(event) {
-        let todo = this.props.todos.filter((item) => item.id == event.target.value)[0];
+        event.preventDefault();
+        let todo = this.props.todos.filter((item) => item._id === event.target.value)[0];
         todo = { ...todo }; //copy so the props is modified
         todo.completed = event.target.checked;
-        this.props.toggleTodo(todo);
+        this.props.updateTodo(todo);
+    }
+
+    handleDelete(todo) {
+        const todoId = todo._id;
+        this.props.onDelete(todoId);
     }
 }
 
 TodoList.propType = {
-    toggleTodo: PropTypes.func.isRequired,
-    todos: PropTypes.array
+    updateTodo: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    todos: PropTypes.array,
+    user: PropTypes.object
 };
 
 TodoList.defaultProps = {

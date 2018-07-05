@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import * as todoActions from '../../actions';
 import TodoList from './TodoList';
 import AddTodo from './AddTodo';
@@ -10,41 +11,58 @@ class Todos extends Component {
 
         // This binding is necessary to make `this` work in the callback
         this.addTodo = this.addTodo.bind(this);
-        this.updateTodoStatus = this.updateTodoStatus.bind(this);
+        this.updateTodo = this.updateTodo.bind(this);
+        this.deleteTodo = this.deleteTodo.bind(this);
     }
 
     render() {
         return (
-            <div className="container-fluid mx-auto w-75 p-5">
-                <AddTodo addTodo={this.addTodo} />
+            <div className="my-3 p-3 bg-white rounded box-shadow">
+                <AddTodo
+                    addTodo={this.addTodo}
+                    user={this.props.user} />
                 <div className="mb-3">
-                    <TodoList toggleTodo={this.updateTodoStatus} todos={this.props.todos}/>
+                    <TodoList
+                        updateTodo={this.updateTodo}
+                        onDelete={this.deleteTodo}
+                        todos={this.props.todos}
+                        user={this.props.user} />
                 </div>
             </div>
         );
     }
 
-    addTodo(newTask) {
-        this.props.addTodo(newTask); //call the dispatch to addTodo
+    addTodo(newTodo) {
+        /*call the dispatch to addTodo*/
+        this.props.addTodo(newTodo);
     }
 
-    updateTodoStatus(todo) {
-        if (todo !== null || todo !== undefined) {
-            this.props.changeTodoStatus(todo); //call dispatch to change completed status of a todo
+    updateTodo(todo) {
+        if (!_.isEmpty(todo)) {
+            /*call dispatch to change completed status of a todo*/
+            this.props.updateTodo(todo);
         }
+    }
+
+    deleteTodo(todoId) {
+        this.props.deleteTodo(todoId);
     }
 }
 
 const stateToProps = (state) => {
     return {
-        todos: state.todos //todos created in the store pointing to todoReducer
+        //todos created in the store pointing to todoReducer
+        todos: state.todos,
+        user: state.user.user
     };
 };
 
 const dispatchToProps = (dispatch) => {
     return {
+        fetchTodos: () => dispatch(todoActions.fetchTodos()),
         addTodo: (todo) => dispatch(todoActions.addTodo(todo)),
-        changeTodoStatus: (todo) => dispatch(todoActions.changeTodoStatus(todo))
+        updateTodo: (todo) => dispatch(todoActions.updateTodo(todo)),
+        deleteTodo: (todoId) => dispatch(todoActions.deleteTodo(todoId))
     };
 };
 
